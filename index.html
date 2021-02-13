@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <title>Rock Paper Scissors</title>
+            <meta charset="UTF-8"/>
+        </head>
+        <body>
+            <script>
+
+                const MOVES = ['ROCK', 'PAPER', 'SCISSORS'];
+                const NUM_MOVES = MOVES.length;
+
+                /* Find a random number between minNum (inclusive) and maxNum (exclusive) (note that this is exactly what we want for array indices) */
+
+                function randomNumber(minNum, maxNum) {
+                    if (minNum == maxNum) {
+                        return minNum;
+                    }
+                    else if (minNum > maxNum) {
+                        return randomNumber(maxNum, minNum);
+                    }
+                    return Math.floor( Math.random() * (maxNum - minNum) );
+                }
+
+                /* Retrieve the computer's move */
+
+                function computerPlay() {
+                    let moveIndex = randomNumber(0, NUM_MOVES);
+                    return MOVES[moveIndex];
+                }
+
+                /* Retrieve the player's move */
+
+                function playerPlay() {
+                    let playerSelectionValid = false;
+                    let playerSelection;
+
+                    while (!playerSelectionValid) {
+                        playerSelection = prompt('Please make a move: ').toUpperCase();
+                        
+                        if (MOVES.includes(playerSelection)) {
+                            playerSelectionValid = true;
+                        }
+                        else {
+                            console.log('ERROR: Please make a valid move [Rock, Paper, Scissors]');
+                        }
+                    }
+
+                    return playerSelection;
+                }
+
+                /* For a given set of player and computer selections in one round, determine who the winner is */
+
+                function singleRound(playerSelection, computerSelection) {
+                    switch(playerSelection) {
+                        case 'ROCK':
+                            switch(computerSelection) {
+                                case 'ROCK':
+                                    console.log( 'Draw! You both chose Rock.' );
+                                    return 0;
+                                case 'PAPER':
+                                    console.log( 'You lose! Paper beats Rock.' );
+                                    return -1;
+                                case 'SCISSORS':
+                                    console.log( 'You win! Rock beats Scissors.' );
+                                    return 1
+                            }
+                        case 'PAPER':
+                            switch(computerSelection) {
+                                case 'ROCK':
+                                    console.log( 'You win! Paper beats Rock.' );
+                                    return 1;
+                                case 'PAPER':
+                                    console.log( 'Draw! You both chose Paper.' );
+                                    return 0;
+                                case 'SCISSORS':
+                                    console.log( 'You lose! Scissors beats Paper.' );
+                                    return -1;
+                            }
+                        case 'SCISSORS':
+                            switch(computerSelection) {
+                                case 'ROCK':
+                                    console.log( 'You lose! Rock beats Scissors.' );
+                                    return -1;
+                                case 'PAPER':
+                                    console.log( 'You win! Scissors beats Paper.' );
+                                    return 1;
+                                case 'SCISSORS':
+                                    console.log( 'Draw! You both chose Scissors.' );
+                                    return 0;
+                            }
+                    }
+                    return 'Error - something went wrong...';
+                }
+
+                /* Determine the winner of the game after the selected number of rounds in game() */
+
+                function gameWinner(playerScore, computerScore) {
+                    if (computerScore > playerScore) {
+                        console.log(`Computer wins! Computer: ${computerScore}; Player: ${playerScore}`);
+                    }
+                    else if (playerScore > computerScore) {
+                        console.log(`Player wins! Player: ${playerScore}; Computer: ${computerScore}`);
+                    }
+                    else {
+                        console.log(`Draw! Player: ${playerScore}; Computer: ${computerScore}`);
+                    }
+                }
+
+                /* Play the game */
+
+                function game() {
+                    const NUM_GAMES = 5;
+                    let gameNum = 0;
+                    let playerScore = 0;
+                    let computerScore = 0;
+
+                    while (gameNum < NUM_GAMES) {
+                        let gameResult = singleRound(playerPlay(), computerPlay());
+                        
+                        if (gameResult > 0) {
+                            ++playerScore;
+                        }
+                        else if (gameResult < 0) {
+                            ++computerScore;
+                        }
+                        ++gameNum;
+                    }
+
+                    gameWinner(playerScore, computerScore);
+                }
+            </script>
+        </body>
+    </html>
